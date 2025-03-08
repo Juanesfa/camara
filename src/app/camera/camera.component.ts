@@ -14,9 +14,11 @@ export class CameraComponent {
   imgUrl: string = '';
   errorMessage: string = '';
   loading: boolean = false;
+  showSuccessMessage: boolean = false; // Nueva variable para controlar el mensaje
 
   async takePicture() {
     this.errorMessage = ''; // Limpiar mensajes de error anteriores
+    this.showSuccessMessage = false; // Ocultar mensaje de éxito anterior
 
     try {
       this.loading = true;
@@ -26,27 +28,17 @@ export class CameraComponent {
       }
       await new Promise(resolve => setTimeout(resolve, 100));
       this.loading = false;
-      this.triggerAnimations();
+
+      // Mostrar mensaje de éxito
+      this.showSuccessMessage = true;
+      setTimeout(() => {
+        this.showSuccessMessage = false; // Ocultar el mensaje después de 3 segundos
+      }, 3000);
     } catch (error) {
       console.error('Error al capturar imagen:', error);
       this.errorMessage = String(error);
       this.imgUrl = '';
       this.loading = false;
-    }
-  }
-
-  triggerAnimations() {
-    const light = document.getElementById('circle');
-    const eject = document.getElementById('photo');
-
-    if (light && eject) {
-      light.classList.remove('flash-animation');
-      eject.classList.remove('eject-photo');
-
-      setTimeout(() => {
-        light.classList.add('flash-animation');
-        eject.classList.add('eject-photo');
-      }, 100);
     }
   }
 }
